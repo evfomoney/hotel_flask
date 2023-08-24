@@ -1,0 +1,143 @@
+{% extends "user/base.html" %} admin
+{% block title %} 个人主页 {% endblock %} 
+{% block content %}
+<div class="row" style="margin-top: 20px" id="buttons">
+  <button style="margin-left: 750px" id="choice01">插入入住信息</button>
+  <button style="margin-left: 50px" id="choice02">修改</button>
+  <button style="margin-left: 50px" id="choice03">删除入住信息</button>
+</div>
+<div class="row" id="statics" style="margin: 30px 10px">
+  <div>
+    <h3><strong>姓名</strong></h3>
+  </div>
+  <div>
+    <h3><strong>房间号</strong></h3>
+  </div>
+    <div><h3><strong>入住时间</strong></h3></div>
+  <div>
+    <h3><strong>价格</strong></h3>
+  </div>
+    <div><h3><strong>房间类型</strong></h3></div> 
+
+  <div>
+    <h3><strong>预留电话号码</strong></h3>
+  </div>
+  <div>
+    <h3><strong>入住时间</strong></h3>
+  </div>
+  <hr style="height: 10px" />
+  <form action="" method="post" role="form" class="form-inline margin-top: 100px">
+    <div class="form-group">
+      <input type="text" name="name" id="name" class="form-control" placeholder="姓名" style="margin-left: 60px; margin-top: -10px"/>
+      <input type="text" name="room_num" id="room_num" class="form-control" placeholder="房间号" style="margin-left: 40px; margin-top: -10px"/>
+      <input type="text" name='time' id='time' class='form-control' placeholder="入住时间" style="margin-left: 60px;margin-top: -10px;">
+        <input type="text" name="price" id="price" class="form-control" placeholder="价格" style="margin-left: 60px; margin-top: -10px"/>
+        <input type="text" name='room_type' id='room_type' class='form-control' placeholder="房间类型" style="margin-left: 50px;margin-top: -10px;"> 
+      <input type="text" name="tele" id="tele" class="form-control" placeholder="预留电话号码" style="margin-left: 50px; margin-top: -10px"/>
+      <input type="text" name="status" id="status" style="display: none" />
+      <div style="display: inline-block; font-size: 20px; margin-left: 130px">
+        由系统自动填入
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block others %}
+<div id="OK">
+    <img src="/static/img/绿色勾子.jpg" style="margin-top: -5px;">&nbsp&nbsp恭喜你,  操作成功!
+</div>
+<div id="deletepg" style="display: none;">
+  <div style="position:absolute; width: 688px; height: 160px; background-color: rgb(193, 204, 218);left: 50%; top: 50%; margin-left: -344px;margin-top: -80px;box-shadow: 5px 5px 30px rgb(123, 128, 135);">
+      <div id="chahao" style="margin-left: 660px;"><a href="#"><span class="glyphicon glyphicon-remove"></span></a></div>
+      <input type="text" id='delete_room' placeholder="记录的房间号" style="font-size: 22px; width: 200px; padding: 15px 20px; border: 2px solid black; border-radius: 20px; margin: 50px 5px 50px 40px;">
+      <input type="text" id='delete_user' placeholder="对应的用户名" style="font-size: 22px; width: 200px; padding: 15px 20px; border: 2px solid black; border-radius: 20px; margin: 50px 50px 50px 0px;">
+      <button id='close' class="btn" style="font-size: 20px; padding: 10px 20px; margin: -30px -15px;">删除</button>
+    </div> 
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+      // 实现"choice01" 与 "choice2"
+  $('#choice01, #choice02').on('click', function(evt) {
+    // alert('yes')
+    let isfull = true
+    for(let i=0; i<$('form input').length-1; i++){
+      if($('form input').eq(i).val()=='')
+        isfull = false
+    }
+    // window.console.log($(this))
+    // window.console.log($(this).prop('id'))
+    // window.console.log($(this).prop('id')=='choice02')
+    if ($(this).prop('id')=='choice01')
+    {
+      $('#status').val(1)
+    }
+    else if($(this).prop('id')=='choice02')
+    {
+      $('#status').val(2)
+    }
+
+    if (isfull) {
+      // window.alert('yse')
+      // $('#status').val(1)
+      // $('#OK').show()
+      $.ajax({
+        url: window.location.href,
+        type: 'POST',
+        data: $('form').serialize(),
+        success: function(reps) {
+          //window.alert('yes2')
+          $('#OK').stop().show();
+          $('form input').val('');
+          setInterval(function(){
+            $('#OK').stop().hide()
+          }, 3000)
+        },
+        error: function() {
+          window.alert('操作无效')
+          location.reload()
+        }
+      })
+    } else
+      window.alert('请输入完整!')
+  })
+
+  // 实现'choice03'
+  $('#choice03').on('click', function() {
+    $('#deletepg').show()
+  })
+  $('#close').on('click', function() {
+    if($('#delete_room').val() == '' || $('#delete_user').val() == ''){
+      window.alert('请将信息填写完整')
+    } 
+    else{
+      $.ajax({
+        url: window.location.href,
+        type: 'POST',
+        data: {
+          "delete_room": $('#delete_room').val(),
+          "delete_user": $('#delete_user').val(),
+          "status": "3"
+        },
+        success: function() {
+          // window.open(window.location) // 在一个新的页面中打开当前页面, 不是想要的刷新
+          location.reload()
+
+          $('#deletepg').hide()
+            window.alert('删除成功')
+          },
+        error: function() {
+          window.alert('删除失败')
+          $('#delete_room').val('')
+        }
+      })
+    }
+  })
+  
+  $('#chahao').on('click', function() {
+    $('#deletepg').hide()
+  })
+</script>
+{% endblock %}

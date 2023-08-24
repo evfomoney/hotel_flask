@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="/static/bin/bootstrap-3.4.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/admin.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <tou>
+        <div class="row">
+          <div id="title">{% block title%} {% endblock %}</div>
+        </div>
+      </tou>
+      <div class="row" id="main">
+        <div class="col-md-2" style="padding: 0" id="navibar">
+          <div id="top"></div>
+          <ul class='list-unstyled' id="navigation">
+              <li><a id="firstpg">首页</a></li>
+              <li><a id="hotel">酒店介绍</a></li>
+              <li><a id="user">客户管理</a></li>
+              <li><a id="room">房间管理</a></li>
+              <li><a id="admin">管理员</a></li>
+          </ul>
+          </div>
+        <div class="col-md-10" id="content">
+          {% block content %} {% endblock %}
+        </div>
+      </div>
+      {% block others %} {% endblock %}
+
+    <script src="/static/bin/jQuery/Body3.3.4/jQuery3_3_4.js"></script>
+    <script>
+      $(function () {
+        $("#firstpg").on("click", function () {
+          url = "127.0.0.1:5000";
+          window.location.href = `http://${url}`;
+        });
+        $("#hotel").on("click", function () {
+          url = "127.0.0.1:5000/hotel";
+          window.location.href = `http://${url}`;
+        });
+        $("#user").on("click", function () {
+          url = "127.0.0.1:5000/user";
+          window.location.href = `http://${url}`;
+        });
+        $("#room").on("click", function () {
+          url = "127.0.0.1:5000/room";
+          window.location.href = `http://${url}`;
+        });
+        $("#admin").on("click", function () {
+          url = "127.0.0.1:5000/user/admin";
+          window.location.href = `http://${url}`;
+        });
+      });
+    </script>
+    {% block script %} {% endblock %}
+  </body>
+</html>
